@@ -81,7 +81,7 @@ $Window.Content = $Grid
 # Add Labels and TextBoxes to Grid
 $labels = @(
     "DT002 datum:",
-    "Datum podnosenja deklaracije:",
+    "Datum podnosenja:",
     "Vrijednost stavke:",
     "Osnovica:"
 )
@@ -95,6 +95,7 @@ for ($i = 0; $i -lt $labels.Length; $i++) {
     $Label.HorizontalAlignment = "Left"
     $Label.VerticalAlignment = "Center"
     $Label.Foreground = [System.Windows.Media.Brushes]::White
+    $Label.FontWeight = [System.Windows.FontWeights]::Bold  # Set label to bold
     [void]$Grid.Children.Add($Label)
     [System.Windows.Controls.Grid]::SetRow($Label, $i)
     [System.Windows.Controls.Grid]::SetColumn($Label, 0)
