@@ -1,31 +1,31 @@
 Add-Type -AssemblyName PresentationFramework
 
-# Function to calculate full months between dates based on the new logic
+# Funkcija za izračun između punih mjeseci između 2 datuma
 Function Calculate-FullMonthsBetweenDates {
     param (
         [datetime]$StartDate,
         [datetime]$EndDate
     )
 
-    # 1. If the dates are the same day (same day, same month, same year), return 1 month
+    # 1. Ako su datumi isti (isti dan-mjesec-godina) računaj kao 1 mjesec
     if ($StartDate.Date -eq $EndDate.Date) {
         return 1
     }
 
-    # 2. If the start and end dates are in the same month and year, return 1 month
+    # 2. Ako su StartDate i EndDate isti mjesec i ista godina računaj kao 1 mjesec
     if ($StartDate.Month -eq $EndDate.Month -and $StartDate.Year -eq $EndDate.Year) {
         return 1
     }
 
-    # 3. Calculate total months between start and end dates
+    # 3. Izračun ukupnog broja mjeseci između StartDate i EndDate
     $totalMonths = ($EndDate.Year - $StartDate.Year) * 12 + ($EndDate.Month - $StartDate.Month)
 
-    # 4. If the start date is after the end date (start date > end date), don't add anything extra
+    # 4. Ako je StartDate > EndDate vrati ukupan broj mjeseci bez dodavanja +1 mjesec
     if ($StartDate.Day -gt $EndDate.Day) {
         return $totalMonths
     }
 
-    # 5. If the end date is later in the month than the start date, add 1 extra month
+    # 5. Ako je EndDate > StartDate dodaj +1 mjesec
     if ($EndDate.Day -gt $StartDate.Day) {
         $totalMonths += 1
     }
@@ -33,14 +33,14 @@ Function Calculate-FullMonthsBetweenDates {
     return $totalMonths
 }
 
-# Function to calculate tax rate based on the number of months
+# Funkcija za izračun Osnovice između 2 datuma
 Function Calculate-TaxRate {
     param (
         [double]$VrijednostStavke,
         [int]$Months
     )
 
-    # Calculate the tax rate (3% of the value multiplied by the number of months)
+    # Formula za izračun osnovice
     $taxRate = $VrijednostStavke * 0.03 * $Months
     return $taxRate
 }
@@ -53,7 +53,7 @@ $Window = New-Object system.Windows.Window
 $Window.Title = "Amortizacija obracun"
 $Window.Width = 400
 $Window.Height = 400
-$Window.ResizeMode = "NoResize"
+$Window.ResizeMode = "CanResize"
 $Window.WindowStartupLocation = "CenterScreen"
 
 # Set dark mode background to #1A1A1A and white foreground
@@ -80,15 +80,15 @@ $Window.Content = $Grid
 
 # Add Labels and TextBoxes to Grid
 $labels = @(
-    "DT002 Datum:",
-    "Datum Deklaracije:",
-    "Vrijednost Stavke:",
-    "Osnovica (Tax rate):"
+    "DT002 datum:",
+    "Datum podnosenja deklaracije:",
+    "Vrijednost stavke:",
+    "Osnovica:"
 )
 $fields = @()
 
 for ($i = 0; $i -lt $labels.Length; $i++) {
-    # Create and add Label
+    # Kreiraj labelu
     $Label = New-Object System.Windows.Controls.Label
     $Label.Content = $labels[$i]
     $Label.Margin = "5"
@@ -99,7 +99,7 @@ for ($i = 0; $i -lt $labels.Length; $i++) {
     [System.Windows.Controls.Grid]::SetRow($Label, $i)
     [System.Windows.Controls.Grid]::SetColumn($Label, 0)
 
-    # Create and add TextBox
+    # Kreiraj TextBox
     $TextBox = New-Object System.Windows.Controls.TextBox
     $TextBox.Margin = "5"
     $TextBox.Width = 120
@@ -113,7 +113,7 @@ for ($i = 0; $i -lt $labels.Length; $i++) {
     [System.Windows.Controls.Grid]::SetColumn($TextBox, 1)
 }
 
-# Add "Izracunaj broj mjeseci" Button (to show popup with months calculation)
+# "Izracunaj broj mjeseci" Button
 $MonthsButton = New-Object System.Windows.Controls.Button
 $MonthsButton.Content = "Izracunaj broj mjeseci"
 $MonthsButton.Margin = "10"
@@ -123,18 +123,18 @@ $MonthsButton.Background = New-Object System.Windows.Media.SolidColorBrush([Syst
 $MonthsButton.Foreground = [System.Windows.Media.Brushes]::White
 $MonthsButton.Add_Click({
     try {
-        # Parse user inputs
+        # Parsiraj user input
         $StartDate = [datetime]::ParseExact($fields[0].Text, "dd.MM.yyyy", $null)
         $EndDate = [datetime]::ParseExact($fields[1].Text, "dd.MM.yyyy", $null)
 
-        # Validate inputs
+        # Validacije
         if ($EndDate -lt $StartDate) {
             [System.Windows.MessageBox]::Show("Datum Deklaracije mora biti posle DT002 datuma.", "Greska", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
         } else {
-            # Calculate the actual number of months
+            # Stvaran broj mjeseci između 2 datuma
             $ActualMonths = Calculate-FullMonthsBetweenDates -StartDate $StartDate -EndDate $EndDate
 
-            # Show result in a popup
+            # Otvori popup sa brojem mjeseci
             [System.Windows.MessageBox]::Show("Broj mjeseci izmedju datuma je: $ActualMonths", "Broj Mjeseci", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
         }
     } catch {
@@ -142,13 +142,13 @@ $MonthsButton.Add_Click({
     }
 })
 
-# Add the Months Button to Grid (Row 4)
+# Dodaj Months Button na Grid (Row 4)
 [void]$Grid.Children.Add($MonthsButton)
 [System.Windows.Controls.Grid]::SetRow($MonthsButton, 4)
 [System.Windows.Controls.Grid]::SetColumn($MonthsButton, 0)
 [System.Windows.Controls.Grid]::SetColumnSpan($MonthsButton, 2)
 
-# Add "Izracunaj" Button (to calculate the tax rate)
+# Dodaj Izracunaj Button
 $Button = New-Object System.Windows.Controls.Button
 $Button.Content = "Izracunaj"
 $Button.Margin = "10"
@@ -158,20 +158,20 @@ $Button.Background = New-Object System.Windows.Media.SolidColorBrush([System.Win
 $Button.Foreground = [System.Windows.Media.Brushes]::White
 $Button.Add_Click({
     try {
-        # Parse user inputs
+        # Parsiraj user input
         $StartDate = [datetime]::ParseExact($fields[0].Text, "dd.MM.yyyy", $null)
         $EndDate = [datetime]::ParseExact($fields[1].Text, "dd.MM.yyyy", $null)
         $VrijednostStavke = [double]$fields[2].Text.Trim()
 
-        # Validate inputs
+        # Validacija
         if ($EndDate -lt $StartDate) {
             [System.Windows.MessageBox]::Show("Datum Deklaracije mora biti posle DT002 datuma.", "Greska", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
         } else {
-            # Calculate full months and tax rate
+            # Izračun punog broja mjeseci i osnovice Calculate full months and tax rate
             $Months = Calculate-FullMonthsBetweenDates -StartDate $StartDate -EndDate $EndDate
             $TaxRate = Calculate-TaxRate -VrijednostStavke $VrijednostStavke -Months $Months
 
-            # Display result in the "Osnovica" field without the "Osnovica: " text
+            # Ispiši rezultat Osnovice
             $fields[3].Text = "$TaxRate"
         }
     } catch {
@@ -179,11 +179,11 @@ $Button.Add_Click({
     }
 })
 
-# Add Izracunaj Button to Grid (Row 5)
+# Add Izracunaj Button na Grid (Row 5)
 [void]$Grid.Children.Add($Button)
 [System.Windows.Controls.Grid]::SetRow($Button, 5)
 [System.Windows.Controls.Grid]::SetColumn($Button, 0)
 [System.Windows.Controls.Grid]::SetColumnSpan($Button, 2)
 
-# Show Window
+# Pokaži formu
 $Window.ShowDialog()

@@ -1,0 +1,34 @@
+
+
+Broj mjeseci za izračun kod obračunske deklaracije tipa Annex E računa se na sljedeći način:
+
+1.            Kao prvi dan (datum) obračunskog razdoblja uzima se datum upisan uz šifru DT002 (datum stavljanja u postupak priv.uvoza)
+2.            Kao zadnji dan (datum) obračunskog razdoblja uzima se datum prihvaćanja obračunske deklaracije (na način da se računa svaki započeti mjesec (čak i ako je to samo jedan dan).
+Broj mjeseci jednak je broju mjeseci između ta dva datuma,
+(brojimo pune mjesece između ta dva datuma i dodajemo jedan ako se početni i završni dan ne poklapaju) .
+
+Primjer 1:
+Računamo razdoblje od 30.08. – 31.03.
+Mjeseci: 9.,10., 11., 12., 1., 2., 3., + jedan mjesec dodatno jer je (31. >30.)  To je 8 mjeseci
+Primjer 2:
+Računamo razdoblje od 30.08. – 31.08.
+Mjeseci: jedan mjesec jer je (31. >30.)  To je 1 mjesec
+Primjer 3:
+Računamo razdoblje od 31.03. – 02.05.
+Mjeseci: 4.,5.  To je 2 mjeseca
+Primjer 4:
+Računamo razdoblje od 15.08. – 29.02.
+Mjeseci: 9.,10., 11., 12., 1.,2. + jedan mjesec  To je 7 mjeseci
+Primjer 5:
+Računamo razdoblje od 29.12. – 31.05.
+Mjeseci: 1.,2., 3., 4., 5. + jedan mjesec dodatno jer je (31. >29.)  To je 6 mjeseci
+
+Primjer 6:
+Računamo razdoblje od 22.05.2022 – 22.06.2022.
+Mjeseci: 6. + nula mjeseci dodatno jer je (22. = 22.)  To je 1 mjesec
+
+Primjer 7:
+Računamo razdoblje od 15.01.2022 – 15.01.2022 (ISTI DAN!).
+Ako je isti dan  To računamo kao 1 mjesec
+
+
