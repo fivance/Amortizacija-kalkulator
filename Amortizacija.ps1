@@ -162,8 +162,10 @@ $Button.Add_Click({
         # Parsiraj user input
         $StartDate = [datetime]::ParseExact($fields[0].Text, "dd.MM.yyyy", $null)
         $EndDate = [datetime]::ParseExact($fields[1].Text, "dd.MM.yyyy", $null)
-        $VrijednostStavke = [double]$fields[2].Text.Trim()
-
+    
+        $VrijednostStavkeText = $fields[2].Text.Trim().Replace(',', '.')
+        $VrijednostStavke = [double]::Parse($VrijednostStavkeText,
+        [System.Globalization.CultureInfo]::InvariantCulture)
         # Validacija
         if ($EndDate -lt $StartDate) {
             [System.Windows.MessageBox]::Show("Datum Deklaracije mora biti posle DT002 datuma.", "Greska", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
